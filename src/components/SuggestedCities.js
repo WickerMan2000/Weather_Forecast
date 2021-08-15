@@ -10,7 +10,7 @@ const SuggestedCities = ({ city, suggestedCity }) => {
 
     useEffect(() => {
         const cities = [];
-        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${10}&appid=3aaac1f503cd848c0e19620ef3ece574`)
+        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${10}&appid=${process.env.REACT_APP_API_KEY}`)
             .then(response => response.json())
             .then(result => {
                 result.forEach(({ country, name, state }) => cities.push({

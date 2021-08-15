@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import styles from './Search.module.css';
 import SuggestedCities from './SuggestedCities';
+import styles from './Search.module.css';
 
 const setTimer = duration => {
     return new Promise(resolve => {
@@ -48,7 +48,7 @@ const Search = () => {
                 [newArray[newArray.length - 2], newArray[newArray.length - 1]])
             const data = await (
                 await fetch(`https://api.openweathermap.org/data/2.5/forecast?` +
-                    `q=${newArray[0]},${newArray[1]},${newArray[2]}&appid=3aaac1f503cd848c0e19620ef3ece574`)
+                    `q=${newArray[0]},${newArray[1]},${newArray[2]}&appid=${process.env.REACT_APP_API_KEY}`)
             ).json();
             if (data.cod === "404") {
                 console.log('Error');
