@@ -26,7 +26,14 @@ const SuggestedCities = ({ city, suggestedCity }) => {
     return (
         <Fragment>
             {listOfCities.map(({ country, name, state }, index) =>
-                <option key={index} onClick={chooseCity}>{`${name} ${state} ${country}`}</option>)}
+                <option style={{
+                    cursor: 'pointer',
+                    marginTop: '0px',
+                    marginLeft: '350px',
+                    zIndex: '1000'
+                }}
+                    key={index}
+                    onClick={chooseCity}>{`${name} ${state} ${country}`}</option>)}
         </Fragment>
     );
 }

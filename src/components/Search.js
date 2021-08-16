@@ -1,6 +1,7 @@
-import React, { Fragment, useCallback, useEffect, useReducer, useRef } from 'react';
+import React, { Fragment, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import SuggestedCities from './SuggestedCities';
 import styles from './Search.module.css';
+import InputContext from '../store/InputContext';
 
 const initialState = {
     cityData: {},
@@ -16,7 +17,8 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 city: action.payload.cityValue,
-                isLoading: action.payload.loading
+                isLoading: action.payload.loading,
+                showUp: action.payload.show
             }
         }
         case 'READY_TO_ENTER': {
@@ -55,19 +57,21 @@ const setTimer = duration => {
 
 const Search = () => {
     const [{ cityData, isLoading, readyToEnter, showUp, city }, dispatch] = useReducer(reducer, initialState);
+    const inputCtx = useContext(InputContext);
     const cityRef = useRef('');
 
     const searchingCity = event => {
         const { value } = event.target;
         cityRef.current = value;
-        dispatch({ type: 'SEARCHING_FOR_THE_CITY', payload: { cityValue: value, loading: true } });
+        dispatch({ type: 'SEARCHING_FOR_THE_CITY', payload: { cityValue: value, loading: true, show: false } });
     };
 
     const press = event => {
         const { code } = event;
         if (readyToEnter && code === "Enter") {
-            console.log(cityData);
             dispatch({ type: 'READY_TO_ENTER', payload: false });
+            inputCtx.dispatch({ type: 'FORECAST_DETAILS', payload: cityData });
+            // console.log(cityData);
         }
     }
 
@@ -88,7 +92,7 @@ const Search = () => {
                     `q=${newArray[0]},${newArray[1]},${newArray[2]}&appid=${process.env.REACT_APP_API_KEY}`)
             ).json();
             if (data.cod === "404") {
-                console.log('Error');
+                console.log(data.message);
             }
             dispatch({ type: 'COLLECTING_DATA', payload: { loading: true, cityDetails: data, show: true } });
         }
