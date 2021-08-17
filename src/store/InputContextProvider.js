@@ -7,7 +7,7 @@ const InputContextProvider = ({ children }) => {
     const [inputState, dispatchInput] = useReducer((state, action) => {
         if (action.type === 'FORECAST_DETAILS') {
             return {
-                forecastDetails: action.payload
+                forecastDetails: action.cityDetails
             }
         }
         return state;

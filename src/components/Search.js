@@ -1,7 +1,8 @@
 import React, { Fragment, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
+import useFetchedData from '../CustomHooks/useFetchedData';
 import SuggestedCities from './SuggestedCities';
-import styles from './Search.module.css';
 import InputContext from '../store/InputContext';
+import styles from './Search.module.css';
 
 const initialState = {
     cityData: {},
@@ -16,9 +17,9 @@ const reducer = (state, action) => {
         case 'SEARCHING_FOR_THE_CITY': {
             return {
                 ...state,
-                city: action.payload.cityValue,
-                isLoading: action.payload.loading,
-                showUp: action.payload.show
+                city: action.cityValue,
+                isLoading: action.loading,
+                showUp: action.show
             }
         }
         case 'READY_TO_ENTER': {
@@ -30,16 +31,16 @@ const reducer = (state, action) => {
         case 'GET_SUGGESTED_CITY': {
             return {
                 ...state,
-                city: action.payload.cityValue,
-                showUp: action.payload.show
+                city: action.cityValue,
+                showUp: action.show
             }
         }
         case 'COLLECTING_DATA': {
             return {
                 ...state,
-                isLoading: action.payload.loading,
-                cityData: action.payload.cityDetails,
-                showUp: action.payload.show
+                isLoading: action.loading,
+                cityData: action.cityDetails,
+                showUp: action.show
             }
         }
         default:
@@ -55,46 +56,39 @@ const setTimer = duration => {
     })
 }
 
+const requestConfiguration = (apiKey, params = []) =>
+    `https://api.openweathermap.org/data/2.5/forecast?q=${params.join(',')}&appid=${apiKey}`;
+
 const Search = () => {
     const [{ cityData, isLoading, readyToEnter, showUp, city }, dispatch] = useReducer(reducer, initialState);
+    const { searchedCity } = useFetchedData();
     const inputCtx = useContext(InputContext);
     const cityRef = useRef('');
 
     const searchingCity = event => {
         const { value } = event.target;
         cityRef.current = value;
-        dispatch({ type: 'SEARCHING_FOR_THE_CITY', payload: { cityValue: value, loading: true, show: false } });
+        dispatch({ type: 'SEARCHING_FOR_THE_CITY', cityValue: value, loading: true, show: false });
     };
 
     const press = event => {
         const { code } = event;
         if (readyToEnter && code === "Enter") {
             dispatch({ type: 'READY_TO_ENTER', payload: false });
-            inputCtx.dispatch({ type: 'FORECAST_DETAILS', payload: cityData });
-            // console.log(cityData);
+            inputCtx.dispatch({ type: 'FORECAST_DETAILS', cityDetails: cityData });
         }
     }
 
     const getSuggestedCity = suggestedCity => {
         cityRef.current = suggestedCity;
-        dispatch({ type: 'GET_SUGGESTED_CITY', payload: { cityValue: suggestedCity, show: false } })
+        dispatch({ type: 'GET_SUGGESTED_CITY', cityValue: suggestedCity, show: false })
     }
 
     const collectData = useCallback(async () => {
         await setTimer(500);
         if (cityRef.current === city) {
-            const newArray = Array.from({ length: 3 }, () => '');
-            cityRef.current.split(' ').forEach((word, index) => newArray.splice(index, 1, word));
-            newArray.includes('') && ([newArray[newArray.length - 1], newArray[newArray.length - 2]] =
-                [newArray[newArray.length - 2], newArray[newArray.length - 1]])
-            const data = await (
-                await fetch(`https://api.openweathermap.org/data/2.5/forecast?` +
-                    `q=${newArray[0]},${newArray[1]},${newArray[2]}&appid=${process.env.REACT_APP_API_KEY}`)
-            ).json();
-            if (data.cod === "404") {
-                console.log(data.message);
-            }
-            dispatch({ type: 'COLLECTING_DATA', payload: { loading: true, cityDetails: data, show: true } });
+            searchedCity(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
+                (Array.from({ length: 3 }, () => ''), cityRef.current, { type: 'COLLECTING_DATA', loading: true, show: true })
         }
     }, [city])
 
