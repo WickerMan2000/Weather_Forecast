@@ -12,14 +12,9 @@ const Details = React.memo(() => {
         setCity(details[1]);
     }, [cityWeatherDetails])
 
-    // console.log(city);
-    // console.log(forecastList);
-    console.log(cityWeatherDetails);
-
     return (
         <Fragment>
-            <div>{city && city.name}, {city && city.country}</div>
-            {/* <div>{forecastList && forecastList.map(el => <p>{el.dt}</p>)}</div> */}
+            <div>{city && city.name} {city && city.country}</div>
         </Fragment>
     );
 })

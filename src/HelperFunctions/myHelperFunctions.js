@@ -10,6 +10,6 @@ const fecthingData = (requestConfig, dispatchFunction) => async (array, city, pa
 }
 
 const requestConfiguration = (apiKey, params) =>
-    `https://api.openweathermap.org/data/2.5/forecast?q=${params.join(',')}&appid=${apiKey}`;
+    `https://api.openweathermap.org/data/2.5/forecast?q=${params.join(',')}&units=metric&appid=${apiKey}`;
 
 export { fecthingData, requestConfiguration };

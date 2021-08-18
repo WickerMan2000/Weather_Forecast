@@ -87,8 +87,7 @@ const Search = () => {
 
     useEffect(() => {
         collectData()
-            .then(() => dispatch({ type: 'READY_TO_ENTER', payload: true }))
-            .catch(({ message }) => message);
+            .then(() => dispatch({ type: 'READY_TO_ENTER', payload: true })).catch(({ message }) => message);
     }, [collectData])
 
     return (
