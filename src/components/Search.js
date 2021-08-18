@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
-import useFetchedData from '../CustomHooks/useFetchedData';
+import { fecthingData, requestConfiguration } from '../HelperFunctions/myHelperFunctions';
 import SuggestedCities from './SuggestedCities';
 import InputContext from '../store/InputContext';
 import styles from './Search.module.css';
@@ -11,9 +11,6 @@ const setTimer = duration => {
         }, duration);
     })
 }
-
-const requestConfiguration = (apiKey, params = []) =>
-    `https://api.openweathermap.org/data/2.5/forecast?q=${params.join(',')}&appid=${apiKey}`;
 
 const Search = () => {
     const [{ cityData, isLoading, readyToEnter, showUp, city }, dispatch] = useReducer((state, action) => {
@@ -58,7 +55,6 @@ const Search = () => {
         city: '',
     });
 
-    const { searchedCity } = useFetchedData();
     const inputCtx = useContext(InputContext);
     const cityRef = useRef('');
 
@@ -84,7 +80,7 @@ const Search = () => {
     const collectData = useCallback(async () => {
         await setTimer(500);
         if (cityRef.current === city) {
-            searchedCity(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
+            fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
                 (Array.from({ length: 3 }, () => ''), cityRef.current, { type: 'COLLECTING_DATA', loading: true, show: true })
         }
     }, [city])
