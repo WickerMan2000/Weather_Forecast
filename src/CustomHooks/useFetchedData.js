@@ -9,6 +9,7 @@ const useFetchedData = () => {
         }
         dispatchFunction({ ...params, ...{ cityDetails: data } });
     }
+
     return { searchedCity };
 }
 

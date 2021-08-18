@@ -4,50 +4,6 @@ import SuggestedCities from './SuggestedCities';
 import InputContext from '../store/InputContext';
 import styles from './Search.module.css';
 
-const initialState = {
-    cityData: {},
-    isLoading: false,
-    readyToEnter: false,
-    showUp: false,
-    city: '',
-}
-
-const reducer = (state, action) => {
-    switch (action.type) {
-        case 'SEARCHING_FOR_THE_CITY': {
-            return {
-                ...state,
-                city: action.cityValue,
-                isLoading: action.loading,
-                showUp: action.show
-            }
-        }
-        case 'READY_TO_ENTER': {
-            return {
-                ...state,
-                readyToEnter: action.payload
-            }
-        }
-        case 'GET_SUGGESTED_CITY': {
-            return {
-                ...state,
-                city: action.cityValue,
-                showUp: action.show
-            }
-        }
-        case 'COLLECTING_DATA': {
-            return {
-                ...state,
-                isLoading: action.loading,
-                cityData: action.cityDetails,
-                showUp: action.show
-            }
-        }
-        default:
-            return state;
-    }
-}
-
 const setTimer = duration => {
     return new Promise(resolve => {
         setTimeout(() => {
@@ -60,7 +16,48 @@ const requestConfiguration = (apiKey, params = []) =>
     `https://api.openweathermap.org/data/2.5/forecast?q=${params.join(',')}&appid=${apiKey}`;
 
 const Search = () => {
-    const [{ cityData, isLoading, readyToEnter, showUp, city }, dispatch] = useReducer(reducer, initialState);
+    const [{ cityData, isLoading, readyToEnter, showUp, city }, dispatch] = useReducer((state, action) => {
+        switch (action.type) {
+            case 'SEARCHING_FOR_THE_CITY': {
+                return {
+                    ...state,
+                    city: action.cityValue,
+                    isLoading: action.loading,
+                    showUp: action.show
+                }
+            }
+            case 'READY_TO_ENTER': {
+                return {
+                    ...state,
+                    readyToEnter: action.payload
+                }
+            }
+            case 'GET_SUGGESTED_CITY': {
+                return {
+                    ...state,
+                    city: action.cityValue,
+                    showUp: action.show
+                }
+            }
+            case 'COLLECTING_DATA': {
+                return {
+                    ...state,
+                    isLoading: action.loading,
+                    cityData: action.cityDetails,
+                    showUp: action.show
+                }
+            }
+            default:
+                return state;
+        }
+    }, {
+        cityData: {},
+        isLoading: false,
+        readyToEnter: false,
+        showUp: false,
+        city: '',
+    });
+
     const { searchedCity } = useFetchedData();
     const inputCtx = useContext(InputContext);
     const cityRef = useRef('');
@@ -93,7 +90,9 @@ const Search = () => {
     }, [city])
 
     useEffect(() => {
-        collectData().then(() => dispatch({ type: 'READY_TO_ENTER', payload: true }));
+        collectData()
+            .then(() => dispatch({ type: 'READY_TO_ENTER', payload: true }))
+            .catch(({ message }) => message);
     }, [collectData])
 
     return (

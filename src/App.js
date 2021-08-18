@@ -25,6 +25,7 @@ function App() {
           [data.city, data.country].join(' '),
           { type: 'FORECAST_DETAILS' }
         )
+          .catch(({ message }) => message)
       );
   }, [])
 
