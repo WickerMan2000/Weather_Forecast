@@ -13,13 +13,13 @@ function App() {
       .then(response =>
         response.json()
       )
-      .then(data =>
+      .then(({ city, country }) =>
         fecthingData(
           requestConfiguration.bind(null, process.env.REACT_APP_API_KEY),
           dispatch
         )(
           Array.from({ length: 3 }, () => ''),
-          [data.city, data.country].join(' '),
+          [city, country].join(' '),
           { type: 'FORECAST_DETAILS' }
         )
           .catch(({ message }) => message)
@@ -30,7 +30,7 @@ function App() {
     <div>
       <Search />
       <Details />
-      <Forecast styles={{
+      <Forecast style={{
         marginTop: 400,
         marginLeft: 150,
         width: '80%'
