@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 
-const SuggestedCities = ({ city, suggestedCity }) => {
+const SuggestedCities = ({ city, suggestedCities }) => {
     const [listOfCities, setListOfCities] = useState([]);
 
     const chooseCity = event => {
         const { value } = event.target;
-        suggestedCity(value);
+        suggestedCities(value);
     }
 
     useEffect(() => {
@@ -25,15 +25,10 @@ const SuggestedCities = ({ city, suggestedCity }) => {
 
     return (
         <Fragment>
-            {listOfCities.map(({ country, name, state }, index) =>
-                <option style={{
-                    cursor: 'pointer',
-                    marginTop: '0px',
-                    marginLeft: '350px',
-                    zIndex: '1000'
-                }}
-                    key={index}
-                    onClick={chooseCity}>{`${name} ${state} ${country}`}</option>)}
+            <datalist id="suggestedCities">
+                {listOfCities.map(({ country, name, state }, index) =>
+                    <option key={index} onSelect={chooseCity}>{`${name} ${state} ${country}`}</option>)}
+            </datalist>
         </Fragment>
     );
 }

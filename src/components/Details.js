@@ -36,7 +36,7 @@ const Details = React.memo(() => {
                         </span>
                     </div>
                 </div>
-                <Image style={{ height: 300, marginLeft: 300 }}
+                <Image style={{ height: 300, marginLeft: 220 }}
                     icon={forecastList.weather && forecastList.weather[0].icon}
                     desc={forecastList.weather && forecastList.weather.description} />
                 <div className={styles.TemperatureDetails}>{forecastList.main && Math.round(forecastList.main.temp)}&deg;C</div>

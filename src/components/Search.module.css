@@ -1,6 +1,8 @@
 .SearchBar {
-  width: 50%;
-  height: 5vh;
-  margin: 100px 350px 20px;
+  width: 75%;
+  height: 7vh;
+  margin: 50px 200px 20px;
   font-size: 3vh;
+  background-color: rgba(59, 14, 14, 0.1);
+  border: none;
 }

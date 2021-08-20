@@ -13,13 +13,12 @@ const setTimer = duration => {
 }
 
 const Search = () => {
-    const [{ cityData, isLoading, readyToEnter, showUp, city }, dispatch] = useReducer((state, action) => {
+    const [{ cityData, readyToEnter, showUp, city }, dispatch] = useReducer((state, action) => {
         switch (action.type) {
             case 'SEARCHING_FOR_THE_CITY': {
                 return {
                     ...state,
                     city: action.cityValue,
-                    isLoading: action.loading,
                     showUp: action.show
                 }
             }
@@ -39,7 +38,6 @@ const Search = () => {
             case 'COLLECTING_DATA': {
                 return {
                     ...state,
-                    isLoading: action.loading,
                     cityData: action.cityDetails,
                     showUp: action.show
                 }
@@ -49,7 +47,6 @@ const Search = () => {
         }
     }, {
         cityData: {},
-        isLoading: false,
         readyToEnter: false,
         showUp: false,
         city: '',
@@ -72,13 +69,13 @@ const Search = () => {
         }
     }
 
-    const getSuggestedCity = suggestedCity => {
-        cityRef.current = suggestedCity;
-        dispatch({ type: 'GET_SUGGESTED_CITY', cityValue: suggestedCity, show: false })
+    const getSuggestedCities = suggestedCities => {
+        dispatch({ type: 'GET_SUGGESTED_CITY', cityValue: suggestedCities, show: false })
+        cityRef.current = suggestedCities;
     }
 
     const collectData = useCallback(async () => {
-        await setTimer(500);
+        await setTimer(10);
         if (cityRef.current === city) {
             fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
                 (Array.from({ length: 3 }, () => ''), cityRef.current, { type: 'COLLECTING_DATA', loading: true, show: true })
@@ -97,13 +94,14 @@ const Search = () => {
                 value={city}
                 type="search"
                 placeholder="City Name"
+                list="suggestedCities"
                 className={styles.SearchBar}
                 onChange={searchingCity}
                 onKeyDown={press} />
             {showUp &&
                 <SuggestedCities
                     city={city}
-                    suggestedCity={getSuggestedCity} />}
+                    suggestedCities={getSuggestedCities} />}
         </Fragment>
     );
 }
