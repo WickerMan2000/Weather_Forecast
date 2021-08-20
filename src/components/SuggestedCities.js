@@ -10,7 +10,9 @@ const SuggestedCities = ({ city, suggestedCities }) => {
 
     useEffect(() => {
         const cities = [];
-        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${10}&appid=${process.env.REACT_APP_API_KEY}`)
+        const abortControl = new AbortController();
+        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${10}&appid=${process.env.REACT_APP_API_KEY}`,
+            { signal: abortControl.signal })
             .then(response => response.json())
             .then(result => {
                 result.forEach(({ country, name, state }) => cities.push({
@@ -21,6 +23,7 @@ const SuggestedCities = ({ city, suggestedCities }) => {
                 setListOfCities(cities);
             })
             .catch(({ message }) => message)
+        return () => abortControl.abort();
     }, [city])
 
     return (
