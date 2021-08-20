@@ -20,7 +20,7 @@ const SuggestedCities = ({ city, suggestedCity }) => {
                 }))
                 setListOfCities(cities);
             })
-            .catch(err => err.message)
+            .catch(({ message }) => message)
     }, [city])
 
     return (

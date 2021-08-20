@@ -4,6 +4,7 @@ import InputContext from './store/InputContext';
 import Forecast from './components/Forecast';
 import Details from './components/Details';
 import Search from './components/Search';
+import Spinner from './UI/Spinner';
 
 function App() {
   const { dispatch } = useContext(InputContext);
@@ -32,14 +33,14 @@ function App() {
   return (
     <Fragment>
       <Search />
-      {!isLoading && <div>
+      {!isLoading ? <div>
         <Details />
         <Forecast style={{
           marginTop: 60,
           marginLeft: 150,
           width: '80%'
         }} />
-      </div>}
+      </div> : <Spinner />}
     </Fragment>
   );
 }
