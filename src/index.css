@@ -8,4 +8,7 @@ html {
 
 body {
   margin: 0;
+  font-family: "Open Sans", Arial, sans-serif;
+  background: rgb(174, 174, 233);
+  color: aliceblue;
 }

@@ -1,0 +1,42 @@
+.Details {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-top: 40px;
+}
+
+.WeatherDetails {
+  padding-left: 100px;
+  margin-left: 100px;
+}
+
+.CityDetails {
+  font-size: 45px;
+  margin-bottom: 30px;
+}
+
+.GeneralDetails {
+  height: 50px;
+  font-size: larger;
+  vertical-align: middle;
+  background-size: auto 70%;
+  background-repeat: no-repeat;
+}
+
+.HumidityIcon {
+  background-image: url(../images/humidity.png);
+}
+
+.PressureIcon {
+  background-image: url(../images/pressure.png);
+}
+
+.WindIcon {
+  background-image: url(../images/wind.png);
+}
+
+.TemperatureDetails {
+  font-size: 40px;
+  margin-left: 300px;
+  margin-top: 40px;
+}

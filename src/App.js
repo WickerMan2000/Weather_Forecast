@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { fecthingData, requestConfiguration } from './HelperFunctions/myHelperFunctions';
 import InputContext from './store/InputContext';
 import Forecast from './components/Forecast';
@@ -7,8 +7,10 @@ import Search from './components/Search';
 
 function App() {
   const { dispatch } = useContext(InputContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch('https://ipapi.co/json/')
       .then(response =>
         response.json()
@@ -22,20 +24,23 @@ function App() {
           [city, country].join(' '),
           { type: 'FORECAST_DETAILS' }
         )
+          .then(() => setIsLoading(false))
           .catch(({ message }) => message)
       );
   }, [])
 
   return (
-    <div>
+    <Fragment>
       <Search />
-      <Details />
-      <Forecast style={{
-        marginTop: 400,
-        marginLeft: 150,
-        width: '80%'
-      }} />
-    </div>
+      {!isLoading && <div>
+        <Details />
+        <Forecast style={{
+          marginTop: 60,
+          marginLeft: 150,
+          width: '80%'
+        }} />
+      </div>}
+    </Fragment>
   );
 }
 
