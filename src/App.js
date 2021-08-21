@@ -28,7 +28,7 @@ function App() {
           .then(() => setIsLoading(false))
           .catch(({ message }) => message)
       );
-  }, [])
+  }, [dispatch])
 
   return (
     <Fragment>

@@ -4,6 +4,8 @@ import SuggestedCities from './SuggestedCities';
 import InputContext from '../store/InputContext';
 import styles from './Search.module.css';
 
+const suggestedCities = "suggestedCities";
+
 const Search = () => {
     const [{ cityData, readyToEnter, showUp, city }, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -47,7 +49,15 @@ const Search = () => {
     const inputCtx = useContext(InputContext);
 
     const searchingCity = event => {
-        const { value } = event.target;
+        let { value } = event.target;
+        const upperCity = city.slice(0, 1).toUpperCase() + city.slice(1);
+        const indexOfCityName = value.indexOf(upperCity);
+        if (indexOfCityName !== 0 && indexOfCityName !== -1) {
+            const newValue = value.replace(value.slice(value.indexOf(upperCity),
+                value.indexOf(upperCity) + upperCity.length), '_');
+            const finalValue = upperCity.concat(' ', newValue);
+            value = finalValue.split(' ').filter(element => element !== '_').join(' ');
+        }
         dispatch({ type: 'SEARCHING_FOR_THE_CITY', cityValue: value, loading: true, show: false });
     };
 
@@ -57,10 +67,6 @@ const Search = () => {
             dispatch({ type: 'READY_TO_ENTER', payload: false });
             inputCtx.dispatch({ type: 'FORECAST_DETAILS', cityDetails: cityData });
         }
-    }
-
-    const getSuggestedCities = suggestedCities => {
-        dispatch({ type: 'GET_SUGGESTED_CITY', cityValue: suggestedCities, show: false })
     }
 
     useEffect(() => {
@@ -76,14 +82,14 @@ const Search = () => {
                 value={city}
                 type="search"
                 placeholder="City Name"
-                list="suggestedCities"
+                list={suggestedCities}
                 className={styles.SearchBar}
                 onChange={searchingCity}
                 onKeyDown={press} />
             {showUp &&
                 <SuggestedCities
                     city={city}
-                    suggestedCities={getSuggestedCities} />}
+                    suggestedCities={suggestedCities} />}
         </Fragment>
     );
 }

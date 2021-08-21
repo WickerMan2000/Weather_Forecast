@@ -3,11 +3,6 @@ import React, { Fragment, useEffect, useState } from 'react';
 const SuggestedCities = ({ city, suggestedCities }) => {
     const [listOfCities, setListOfCities] = useState([]);
 
-    const chooseCity = event => {
-        const { value } = event.target;
-        suggestedCities(value);
-    }
-
     useEffect(() => {
         const cities = [];
         const abortControl = new AbortController();
@@ -28,9 +23,9 @@ const SuggestedCities = ({ city, suggestedCities }) => {
 
     return (
         <Fragment>
-            <datalist id="suggestedCities">
+            <datalist id={suggestedCities}>
                 {listOfCities.map(({ country, name, state }, index) =>
-                    <option key={index} onSelect={chooseCity}>{`${name} ${state} ${country}`}</option>)}
+                    <option key={index}>{`${name} ${state} ${country}`}</option>)}
             </datalist>
         </Fragment>
     );
