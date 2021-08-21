@@ -22,7 +22,7 @@ function App() {
           dispatch
         )(
           Array.from({ length: 3 }, () => ''),
-          [city, country].join(' '),
+          [city, country].join(', '),
           { type: 'FORECAST_DETAILS' }
         )
           .then(() => setIsLoading(false))

@@ -36,6 +36,12 @@ const Search = () => {
                     showUp: action.show
                 }
             }
+            case 'GET_RID_OF_SUGGESTIONS': {
+                return {
+                    ...state,
+                    showUp: action.show
+                }
+            }
             default:
                 return state;
         }
@@ -49,32 +55,49 @@ const Search = () => {
     const inputCtx = useContext(InputContext);
 
     const searchingCity = event => {
-        let { value } = event.target;
-        const upperCity = city.slice(0, 1).toUpperCase() + city.slice(1);
-        const indexOfCityName = value.indexOf(upperCity);
-        if (indexOfCityName !== 0 && indexOfCityName !== -1) {
-            const newValue = value.replace(value.slice(value.indexOf(upperCity),
-                value.indexOf(upperCity) + upperCity.length), '_');
-            const finalValue = upperCity.concat(' ', newValue);
-            value = finalValue.split(' ').filter(element => element !== '_').join(' ');
-        }
-        dispatch({ type: 'SEARCHING_FOR_THE_CITY', cityValue: value, loading: true, show: false });
+        const { value } = event.target;
+        dispatch({
+            type: 'SEARCHING_FOR_THE_CITY',
+            cityValue: value,
+            loading: true,
+            show: false
+        });
     };
 
     const press = event => {
         const { code } = event;
         if (readyToEnter && code === "Enter") {
-            dispatch({ type: 'READY_TO_ENTER', payload: false });
-            inputCtx.dispatch({ type: 'FORECAST_DETAILS', cityDetails: cityData });
+            dispatch({
+                type: 'READY_TO_ENTER',
+                payload: false
+            });
+            inputCtx.dispatch({
+                type: 'FORECAST_DETAILS',
+                cityDetails: cityData
+            });
         }
     }
 
     useEffect(() => {
         fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
-            (Array.from({ length: 3 }, () => ''), city, { type: 'COLLECTING_DATA', loading: true, show: true })
-            .then(() => dispatch({ type: 'READY_TO_ENTER', payload: true }))
+            (Array.from({ length: 3 }, () => ''), city, {
+                type: 'COLLECTING_DATA',
+                loading: true,
+                show: true
+            })
+            .then(() => dispatch({
+                type: 'READY_TO_ENTER',
+                payload: city ? true : false
+            }))
             .catch(({ message }) => message);
     }, [city])
+
+    useEffect(() => {
+        return () => dispatch({
+            type: 'GET_RID_OF_SUGGESTIONS',
+            show: false
+        })
+    }, [readyToEnter])
 
     return (
         <Fragment>

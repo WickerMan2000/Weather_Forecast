@@ -25,7 +25,7 @@ const SuggestedCities = ({ city, suggestedCities }) => {
         <Fragment>
             <datalist id={suggestedCities}>
                 {listOfCities.map(({ country, name, state }, index) =>
-                    <option key={index}>{`${name} ${state} ${country}`}</option>)}
+                    <option key={index}>{`${name}, ${state} ${state && ','} ${country}`}</option>)}
             </datalist>
         </Fragment>
     );
