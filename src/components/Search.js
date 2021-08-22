@@ -22,13 +22,6 @@ const Search = () => {
                     readyToEnter: action.payload
                 }
             }
-            case 'GET_SUGGESTED_CITY': {
-                return {
-                    ...state,
-                    city: action.cityValue,
-                    showUp: action.show
-                }
-            }
             case 'COLLECTING_DATA': {
                 return {
                     ...state,
@@ -49,7 +42,7 @@ const Search = () => {
         cityData: {},
         readyToEnter: false,
         showUp: false,
-        city: '',
+        city: ''
     });
 
     const inputCtx = useContext(InputContext);

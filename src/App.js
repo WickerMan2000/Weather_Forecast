@@ -16,13 +16,13 @@ function App() {
       .then(response =>
         response.json()
       )
-      .then(({ city, country }) =>
+      .then(({ city, country, state }) =>
         fecthingData(
           requestConfiguration.bind(null, process.env.REACT_APP_API_KEY),
           dispatch
         )(
           Array.from({ length: 3 }, () => ''),
-          [city, country].join(', '),
+          [city, state, country].join(', '),
           { type: 'FORECAST_DETAILS' }
         )
           .then(() => setIsLoading(false))
