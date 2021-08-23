@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import Carousel from 'react-elastic-carousel';
 import InputContext from '../store/InputContext';
-import Image from './Image';
-import styles from './Forecast.module.css';
+import Information from './Information';
 
 const Forecast = ({ style }) => {
     const { cityWeatherDetails: { list = [] } } = useContext(InputContext);
@@ -13,13 +12,12 @@ const Forecast = ({ style }) => {
                 itemPadding={[10, 20]}
                 breakPoints={[{ width: 1000, itemsToShow: 5 }]}>
                 {list.map(({ dt, main: { temp }, weather }, index) =>
-                    <article className={styles.DayDetails} key={index}>
-                        <h1>{new Date(dt * 1000).toLocaleDateString('en-EN', { 'weekday': 'long' })}</h1>
-                        <Image icon={weather[0].icon} desc={weather[0].description} />
-                        <h2 className={styles.Description}>{weather[0].description}</h2>
-                        <h3>{new Date(dt * 1000).toLocaleTimeString('en-EN', { hour: '2-digit', minute: '2-digit' })}</h3>
-                        <p className={styles.DayTemperature}><span>{Math.round(temp)}</span>&deg;C</p>
-                    </article>
+                    <Information
+                        index={index}
+                        date={dt}
+                        icon={weather[0].icon}
+                        description={weather[0].description}
+                        temperature={temp} />
                 )}
             </Carousel>
         </div>

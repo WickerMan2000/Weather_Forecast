@@ -1,0 +1,18 @@
+.DayDetails {
+  background-color: rgba(18, 173, 212, 0.2);
+  border-radius: 16px;
+  margin: 0 10px 10px;
+  box-sizing: border-box;
+  min-width: 150px;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.DayTemperature {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.Description {
+  font-size: clamp(2vh, 2.4vh, 2.5vh);
+}
