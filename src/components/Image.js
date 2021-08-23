@@ -5,10 +5,19 @@ const Image = ({ icon, desc, style }) => {
 
     useEffect(() => {
         const abortControl = new AbortController();
-        fetch(`http://openweathermap.org/img/wn/${icon}@2x.png`, { signal: abortControl.signal })
-            .then(response => response.blob())
-            .then(result => setWeatherImage(URL.createObjectURL(result)))
-            .catch(({ message }) => message)
+        fetch(`http://openweathermap.org/img/wn/${icon}@2x.png`, {
+            signal: abortControl.signal
+        })
+            .then(response =>
+                response.blob()
+            )
+            .then(result =>
+                setWeatherImage(URL.createObjectURL(result))
+            )
+            .catch(({ message }) =>
+                message
+            )
+
         return () => abortControl.abort();
     }, [icon])
 

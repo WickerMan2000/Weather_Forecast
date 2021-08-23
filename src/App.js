@@ -25,8 +25,12 @@ function App() {
           [city, state, country].join(', '),
           { type: 'FORECAST_DETAILS' }
         )
-          .then(() => setIsLoading(false))
-          .catch(({ message }) => message)
+          .then(() =>
+            setIsLoading(false)
+          )
+          .catch(({ message }) =>
+            message
+          )
       );
   }, [dispatch])
 

@@ -7,7 +7,7 @@ import styles from './Search.module.css';
 const suggestedCities = "suggestedCities";
 
 const Search = () => {
-    const [{ cityData, readyToEnter, showUp, city }, dispatch] = useReducer((state, action) => {
+    const [{ cityData, readyToEnter, showUp, city, getEntered }, dispatch] = useReducer((state, action) => {
         switch (action.type) {
             case 'SEARCHING_FOR_THE_CITY': {
                 return {
@@ -19,7 +19,8 @@ const Search = () => {
             case 'READY_TO_ENTER': {
                 return {
                     ...state,
-                    readyToEnter: action.payload
+                    readyToEnter: action.ready,
+                    getEntered: action.entered
                 }
             }
             case 'COLLECTING_DATA': {
@@ -41,6 +42,7 @@ const Search = () => {
     }, {
         cityData: {},
         readyToEnter: false,
+        getEntered: false,
         showUp: false,
         city: ''
     });
@@ -52,7 +54,6 @@ const Search = () => {
         dispatch({
             type: 'SEARCHING_FOR_THE_CITY',
             cityValue: value,
-            loading: true,
             show: false
         });
     };
@@ -62,11 +63,17 @@ const Search = () => {
         if (readyToEnter && code === "Enter") {
             dispatch({
                 type: 'READY_TO_ENTER',
-                payload: false
+                ready: false,
+                entered: true
             });
             inputCtx.dispatch({
                 type: 'FORECAST_DETAILS',
                 cityDetails: cityData
+            });
+        } else {
+            dispatch({
+                type: 'READY_TO_ENTER',
+                ready: false
             });
         }
     }
@@ -75,14 +82,16 @@ const Search = () => {
         fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
             (Array.from({ length: 3 }, () => ''), city, {
                 type: 'COLLECTING_DATA',
-                loading: true,
                 show: true
             })
-            .then(() => dispatch({
-                type: 'READY_TO_ENTER',
-                payload: city ? true : false
-            }))
-            .catch(({ message }) => message);
+            .then(() =>
+                dispatch({
+                    type: 'READY_TO_ENTER',
+                    ready: city ? true : false
+                }))
+            .catch(({ message }) =>
+                message
+            );
     }, [city])
 
     useEffect(() => {
@@ -90,7 +99,7 @@ const Search = () => {
             type: 'GET_RID_OF_SUGGESTIONS',
             show: false
         })
-    }, [readyToEnter])
+    }, [getEntered])
 
     return (
         <Fragment>

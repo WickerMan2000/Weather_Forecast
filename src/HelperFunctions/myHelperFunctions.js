@@ -8,6 +8,7 @@ const fecthingData = (requestConfig, dispatchFunction) => async (array, city, pa
     const data = await (await fetch(requestConfig(array))).json();
     if (data.cod === "404") {
         console.log(data.message);
+        return;
     }
     dispatchFunction({ ...params, ...{ cityDetails: data } });
 }
