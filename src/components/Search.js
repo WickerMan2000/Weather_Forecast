@@ -1,10 +1,18 @@
-import React, { Fragment, useContext, useEffect, useReducer } from 'react';
+import React, { Fragment, useContext, useEffect, useReducer, useRef } from 'react';
 import { fecthingData, requestConfiguration } from '../HelperFunctions/myHelperFunctions';
 import SuggestedCities from './SuggestedCities';
 import InputContext from '../store/InputContext';
 import styles from './Search.module.css';
 
 const suggestedCities = "suggestedCities";
+
+const setTimer = duration => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, [duration])
+    })
+}
 
 const Search = () => {
     const [{ cityData, readyToEnter, showUp, city, getEntered }, dispatch] = useReducer((state, action) => {
@@ -48,9 +56,11 @@ const Search = () => {
     });
 
     const inputCtx = useContext(InputContext);
+    const cityRef = useRef('');
 
     const searchingCity = event => {
         const { value } = event.target;
+        cityRef.current = value;
         dispatch({
             type: 'SEARCHING_FOR_THE_CITY',
             cityValue: value,
@@ -79,19 +89,23 @@ const Search = () => {
     }
 
     useEffect(() => {
-        fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
-            (Array.from({ length: 3 }, () => ''), city, {
-                type: 'COLLECTING_DATA',
-                show: true
-            })
-            .then(() =>
-                dispatch({
-                    type: 'READY_TO_ENTER',
-                    ready: city ? true : false
-                }))
-            .catch(({ message }) =>
-                message
-            );
+        (async () => {
+            await setTimer(250);
+            cityRef.current === city &&
+                fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
+                    (Array.from({ length: 3 }, () => ''), cityRef.current, {
+                        type: 'COLLECTING_DATA',
+                        show: true
+                    })
+                    .then(() =>
+                        dispatch({
+                            type: 'READY_TO_ENTER',
+                            ready: city ? true : false
+                        }))
+                    .catch(({ message }) =>
+                        message
+                    );
+        })()
     }, [city])
 
     useEffect(() => {
@@ -105,6 +119,7 @@ const Search = () => {
         <Fragment>
             <input
                 value={city}
+                ref={cityRef}
                 type="search"
                 placeholder="City Name"
                 list={suggestedCities}

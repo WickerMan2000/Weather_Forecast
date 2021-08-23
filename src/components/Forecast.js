@@ -16,7 +16,8 @@ const Forecast = ({ style }) => {
                     <article className={styles.DayDetails} key={index}>
                         <h1>{new Date(dt * 1000).toLocaleDateString('en-EN', { 'weekday': 'long' })}</h1>
                         <Image icon={weather[0].icon} desc={weather[0].description} />
-                        <h2>{new Date(dt * 1000).toLocaleTimeString('en-EN', { hour: '2-digit', minute: '2-digit' })}</h2>
+                        <h2 className={styles.Description}>{weather[0].description}</h2>
+                        <h3>{new Date(dt * 1000).toLocaleTimeString('en-EN', { hour: '2-digit', minute: '2-digit' })}</h3>
                         <p className={styles.DayTemperature}><span>{Math.round(temp)}</span>&deg;C</p>
                     </article>
                 )}

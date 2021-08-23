@@ -12,3 +12,7 @@
   font-size: 20px;
   font-weight: bold;
 }
+
+.Description {
+  font-size: clamp(2vh, 2.4vh, 2.5vh);
+}
