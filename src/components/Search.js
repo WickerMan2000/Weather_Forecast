@@ -89,8 +89,9 @@ const Search = () => {
     }
 
     useEffect(() => {
+        let resolve;
         (async () => {
-            await setTimer(250);
+            resolve = await setTimer(250);
             cityRef.current === city &&
                 fecthingData(requestConfiguration.bind(null, process.env.REACT_APP_API_KEY), dispatch)
                     (Array.from({ length: 3 }, () => ''), cityRef.current, {
@@ -106,6 +107,8 @@ const Search = () => {
                         message
                     );
         })()
+
+        return () => clearTimeout(resolve);
     }, [city])
 
     useEffect(() => {
